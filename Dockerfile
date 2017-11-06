@@ -13,7 +13,7 @@ RUN chown -R sdc:sdc demo.py \
     && pip install faker
 
 # Add backup json pipelines.
-# COPY /pipelines/*.json /var/lib/sdc/data/pipelines
+COPY ./pipelines/*.json /data/pipelines
 
 # Enter as user sdc.
 USER sdc

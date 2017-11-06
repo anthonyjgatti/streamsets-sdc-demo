@@ -7,11 +7,14 @@ docker rm -f sdc-demo
 # Delete and retry.
 # docker pull streamsets/datacollector
 
-
 # Build image.
 docker build -t sdc-demo .
 
 # Run container and exec into bash shell as sdc user.
 docker run --restart on-failure -p 18630:18630 -d --name sdc-demo sdc-demo
 docker exec -u sdc -it sdc-demo bash
+
+# Copy pipelines back from whatever has changed in container.
+docker cp sdc-demo:/data/pipelines/*.json $PWD/pipelines
+docker stop sdc-demo
 
