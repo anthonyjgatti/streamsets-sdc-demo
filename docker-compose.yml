@@ -1,0 +1,40 @@
+version: '2'
+
+services:
+
+  data-collector:
+    build: ./data-collector
+    volumes:
+      - ./data-collector/scripts:/usr/src/app
+      - ./data-collector/pipelines:/data/pipelines
+      # - ./data-collector/sdc-stagelibs:/opt/streamsets-datacollector-2.7.2.0/streamsets-libs
+    ports:
+      - 18630:18630
+    stdin_open: true
+    tty: true
+    container_name: sdc_demo
+
+  db:
+    image: mysql:5.6
+    ports:
+      - 3306:3306
+    depends_on:
+      - data-collector
+    stdin_open: true
+    tty: true
+    container_name: mysql_sdc_demo
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: super_secret_password
+      MYSQL_DATABASE: acme
+      MYSQL_USER: sdc_user
+      MYSQL_PASSWORD: natty_is_gr8
+
+#  cdh-cluster:
+#    image: cloudera/quickstart:latest
+#    hostname: quickstart.cloudera
+#    privileged: true
+#    ports:
+#      - 8888:8888
+#    depends_on:
+#      - data-collector

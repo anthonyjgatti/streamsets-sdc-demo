@@ -1,3 +1,4 @@
+#!/bin/python
 
 import argparse
 import collections
@@ -6,7 +7,6 @@ from faker import Faker
 import os
 import random
 import time
-
 
 class SdcDemoFactory(object):
 

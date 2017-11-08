@@ -15,16 +15,23 @@
 * The main primitive is the pipeline.
 * Pipelines have origins, processors, and destinations (also executors and parameters).
 
+# A Common Data Architecture.
+
+
+# Features and Capabilities.
+
+# Using SDC.
+
 # Under the Hood.
 
 * Pipelines generate JSON that gets translated into programs that run on the JVM.
-* Pipelines are stateful => the "offset" determines what the pipeline has already proccessed.
+* Pipelines are stateful => the "offset" determines what the pipeline has already processed.
 
-# Use cases to examine today.
+# The Use Case
 
-1. Reading log files and writing to Solr.
-2. Reading zipped csv files and writing to Hive tables.
-3. Real time web scraping of Spotify API.
+# DEMO
+
+
 
 # Some future use cases.
 
@@ -36,5 +43,4 @@
 
 1. Problems with data locality.
 2. Race conditions on file writes.
-3. 
-
+3.
