@@ -10,13 +10,11 @@ RUN mkdir -p /landing_zone \
 
 # Install desired jars.
 ENV SDC_VERSION 2.7.2.0
-ENV SDC_LIB jdbc
+ENV SDC_LIBS jdbc mongodb_3
 
-RUN /opt/streamsets-datacollector-${SDC_VERSION}/libexec/_stagelibs \
-  -install=streamsets-datacollector-${SDC_LIB}-lib
+RUN for i in $SDC_LIBS; \
+  do /opt/streamsets-datacollector-${SDC_VERSION}/libexec/_stagelibs \
+  -install=streamsets-datacollector-$i-lib; done
 
 # Restart the data collector.
 CMD ["dc", "-exec"]
-
-# Edit ownership of demo script.
-RUN chown sdc:sdc /usr/src/app/demo.py

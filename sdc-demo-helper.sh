@@ -24,7 +24,7 @@ elif [[ $1 == "mysql" ]]; then
 
 # Shut down services.
 elif [[ $1 == "stop" ]]; then
-  docker-compose down
+  docker-compose down --remove-orphans
 
 # Error if bad entry.
 else

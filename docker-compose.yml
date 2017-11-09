@@ -7,7 +7,7 @@ services:
     volumes:
       - ./data-collector/scripts:/usr/src/app
       - ./data-collector/pipelines:/data/pipelines
-      # - ./data-collector/sdc-stagelibs:/opt/streamsets-datacollector-2.7.2.0/streamsets-libs
+      - ./data-collector/pipeline-statefiles:/data/runInfo
     ports:
       - 18630:18630
     stdin_open: true
@@ -31,10 +31,13 @@ services:
       MYSQL_PASSWORD: natty_is_gr8
 
 #  cdh-cluster:
-#    image: cloudera/quickstart:latest
-#    hostname: quickstart.cloudera
-#    privileged: true
+#    build: ./cdh-cluster
 #    ports:
 #      - 8888:8888
+#    hostname: quickstart.cloudera
+#    privileged: true
 #    depends_on:
 #      - data-collector
+#    stdin_open: true
+#    tty: true
+#    container_name: cdh

@@ -1,0 +1,18 @@
+{
+  "pipelineId" : "TestReceipts6822dd7e-83fa-48af-86cd-1de70510a13e",
+  "title" : "Test_Receipts",
+  "description" : "",
+  "created" : 1510163070446,
+  "lastModified" : 1510173101914,
+  "creator" : "admin",
+  "lastModifier" : "admin",
+  "lastRev" : "0",
+  "uuid" : "8e51ef2e-bd32-44e7-9819-094cd3dd4f62",
+  "valid" : true,
+  "metadata" : {
+    "labels" : [ ]
+  },
+  "name" : "TestReceipts6822dd7e-83fa-48af-86cd-1de70510a13e",
+  "sdcVersion" : "2.7.2.0",
+  "sdcId" : "662702be-c4a5-11e7-92e0-89b06323ee3d"
+}
