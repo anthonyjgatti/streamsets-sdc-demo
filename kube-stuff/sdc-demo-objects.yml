@@ -1,0 +1,112 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    name: sdcfrontend
+  name: sdcfrontend
+spec:
+  ports:
+    - port: 18630
+      targetPort: data-collector
+  selector:
+    name: data-collector
+  type: LoadBalancer
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    name: mysql
+  name: mysql
+spec:
+  ports:
+    - port: 3306
+      targetPort: mysql
+  selector:
+    name: mysql
+---
+apiVersion: v1
+kind: ReplicationController
+metadata:
+  name: data-collector
+  labels:
+    name: data-collector
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        name: data-collector
+    spec:
+      containers:
+      - name: data-collector
+        image: data-collector:v1
+        ports:
+          - containerPort: 18630
+            name: data-collector
+        volumeMounts:
+          - name: data-collector-persistent-storage
+            mountPath: /var/lib/sdc
+        imagePullPolicy: Never
+      volumes:
+        - name: data-collector-persistent-storage
+          persistentVolumeClaim:
+            claimName: claim-sdc
+---
+apiVersion: v1
+kind: ReplicationController
+metadata:
+  name: mysql
+  labels:
+    name: mysql
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        name: mysql
+    spec:
+      containers:
+      - name: mysql
+        image: mysql
+        env:
+          - name: MYSQL_ROOT_PASSWORD
+            value: super_seckrit_passwurd
+          - name: MYSQL_USER
+            value: acme
+          - name: MYSQL_PASSWORD
+            value: natty_is_gr8
+          - name: MYSQL_DATABASE
+            value: acme
+        ports:
+          - containerPort: 3306
+            name: mysql
+        volumeMounts:
+          - name: mysql-persistent-storage
+            mountPath: /var/lib/mysql/data
+      volumes:
+        - name: mysql-persistent-storage
+          persistentVolumeClaim:
+            claimName: claim-mysql
+---
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: claim-sdc
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+---
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: claim-mysql
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 2Gi

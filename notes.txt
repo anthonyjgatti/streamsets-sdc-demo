@@ -1,0 +1,14 @@
+
+Scenario
+
+Disparate systems aquiring from multiple shopping stores
+
+Each store has contracts for its own ERP system ending at different times so
+  they're gonna want to run them until they die, because they already paid for.
+
+They're going to keep buying companies, no matter what.
+
+They need to funnel it into a single system.
+
+Get rid of all those systems = 20 mil
+Buy our tool and support = 100k
