@@ -1,15 +1,22 @@
 #!/bin/bash
 
-if [ "$1" != "preview"] || [ "$1" != "data"] || [ "$1" != "start" ]; then
-  echo "Usage: sdc-demo-helper {start,preview,data}"
-  exit 1
-fi
+# CHECK INPUT
+
 
 if [ "$1" == "start" ]; then
   echo "starting"
 
-elif [ "$2" == "xml" ]; then
-  python demo.py --usecase xml --type $1
+  if [ "$2" == "rebuild" ]; then
+    docker-compose up -d --build
+  else
+    docker-compose up -d
+  fi
 
+
+elif [ "$1" == "stop" ]; then
+  docker-compose down
+
+else
+  python demo.py --type $1 --usecase $2
 
 fi

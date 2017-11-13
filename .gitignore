@@ -1,3 +1,7 @@
-*.pem
-./data/**/*
-./kube-stuff/*
+data/mysql/auto.cnf
+data/mysql/ib_logfile0
+data/mysql/ib_logfile1
+data/mysql/ibdata1
+data/sdc/acme_*_output.txt
+data/sdc/acme_*_output.csv
+kube-stuff/

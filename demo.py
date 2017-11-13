@@ -2,9 +2,10 @@
 
 import argparse
 import collections
+import csv
 from datetime import datetime
 from faker import Faker
-import lxml
+import json
 import os
 import random
 import time
@@ -15,60 +16,73 @@ class SdcDemoFactory(object):
 
         self.use_case = use_case
         self.run_type = run_type
-        self.runs = 1000 if run_type == 'data' else 10
+        self.runs = 1000 if run_type == 'data' else 1
 
         # Generate fake list of cashiers and grocery menu.
         fake = Faker()
         self.cashiers = [fake.name() for _ in range(5)]
         self.menu = {
-            "Apple": 1, "Avocado": 2.25, "Banana": 0.5, "Beef": 4, "Chicken": 3,
-            "Chocolate chips": 2, "Cucumber": 1, "Lettuce": 1.5, "Pasta": 3,
-            "Pistachios": 5, "Rice": 3, "Salmon": 7
+            'lettuce': {'price': 1.5, 'sku': 'LET'},
+            'grapefruit': {'price': 1, 'sku': 'GPF'},
+            'tomato': {'price': 2, 'sku': 'TOM'},
+            'rice': {'price': 1, 'sku': 'RIC'},
+            'beans': {'price': 2, 'sku': 'BEN'},
+            'milk': {'price': 3, 'sku': 'MLK'},
+            'cheese': {'price': 2.5, 'sku': 'CHS'},
+            'chicken': {'price': 3.5, 'sku': 'CHK'},
+            'pork': {'price': 4, 'sku': 'PRK'},
+            'avocado': {'price': 1, 'sku': 'AVC'},
+            'turkey': {'price': 4, 'sku': 'TRK'}
         }
+
+        # Determine record list.
+        self.records = [self.dataFactory() for _ in range(self.runs)]
 
         # Look up which helper function to call, extract output.
-        self.func_lookup = {
-            'receipts': self.receipts()
-            'xmlOutput': self.xmlOutput()
-
-        }
-        self.func_lookup[use_case]
+        self.func_lookup = {'json': self.jsonFactory, 'csv': self.csvFactory}
+        self.func_lookup[use_case]()
 
 
-    def receipts(self):
-        '''Generate some receipts.'''
+    def dataFactory(self):
+        '''Generate the record as a list.'''
 
-        for i in range(self.runs):
-            items = collections.Counter(
-                [random.choice(self.menu.keys()) for _ in range(random.randint(1,20))]
-            )
+        output = []
+        id_num = random.randint(1,9999999)
+        time = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+        cashier = random.choice(self.cashiers)
 
-            receipt = '\n'.join(['Thank you for shopping at','ACME GROCERY STORE !!!!!!\n',
-                'Your receipt from your visit on', datetime.now().strftime('%B %d, %Y %H:%m:%S'),
-                '\nYour cashier is: ', random.choice(self.cashiers), '\nItems Purchased:\n'])
+        for _ in range(random.randint(1,15)):
+            key = random.choice(list(self.menu.keys()))
+            output.append({
+                'transaction_id': id_num,
+                'transaction_time': time,
+                'item': key,
+                'information': self.menu[key],
+                'cashier': cashier
+            })
 
-            for item in items:
-                receipt += ''.join(['{:2}'.format(str(items[item])), '   ', item,
-                    '\t' * (2 - int(item == 'Chocolate chips')),
-                    '{:6.2f}'.format(menu[item] * items[item]), '\n'])
-            subtotal = sum(menu[item] * items[item] for item in items)
-            tax = subtotal * 0.0625
-            total = subtotal + tax
-            receipt += '\n'.join(['-' * 31, 'Subtotal:\t\t${:6.2f}'.format(subtotal),
-                'Tax:\t\t\t${:6.2f}'.format(tax), '-' * 31, 'TOTAL:\t\t\t${:6.2f}'.format(total)])
-
-            if i == 0 and self.run_type == 'preview':
-                print(receipt)
-
-            with open('./data/sdc/acme_receipts_' + str(i) + '.txt']), 'w') as f:
-                f.write(receipt)
-            time.sleep(0.25)
-
-        return receipt
+        return output
 
 
-    def xmlOutput(self):
+    def jsonFactory(self):
+        '''Generate json records.'''
 
+        for count, record in enumerate(self.records):
+
+            # Generate JSON.
+            with open('./data/sdc/acme_legacycorp_output' + str(count) + '.txt', 'w') as f:
+                json.dump(record, f)
+
+            if count == 0 and self.run_type == 'preview':
+                print(json.dumps(record, indent = 4))
+
+
+    def csvFactory(self):
+
+        with open('./data/sdc/acme_hardwork_output' + str(count) + '.csv', 'w') as f:
+            wr = csv.writer(f, delimiter = ',')
+            for record in self.records:
+                wr.writerow(record)
 
 
 if __name__ == '__main__':
@@ -81,7 +95,7 @@ if __name__ == '__main__':
     # Parse arguments.
     parser = argparse.ArgumentParser()
     parser.add_argument("--type", required=True, choices=['preview', 'data'])
-    parser.add_argument("--usecase", required=True, choices=['receipts'])
+    parser.add_argument("--usecase", required=True, choices=['json', 'csv'])
     args = parser.parse_args()
 
     # Run the demo!
