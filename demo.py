@@ -16,7 +16,7 @@ class SdcDemoFactory(object):
 
         self.use_case = use_case
         self.run_type = run_type
-        self.runs = 1000 if run_type == 'data' else 1
+        self.runs = 100000 if run_type == 'data' else 1
 
         # Generate fake list of cashiers and grocery menu.
         fake = Faker()
@@ -70,6 +70,9 @@ class SdcDemoFactory(object):
         for count, record in enumerate(self.records):
 
             # Generate JSON.
+            if count % 1000 == 0 and count > 0:
+                time.sleep(5)
+
             with open('./data/sdc/acme_legacycorp_output' + str(count) + '.txt', 'w') as f:
                 json.dump(record, f)
 
@@ -79,10 +82,21 @@ class SdcDemoFactory(object):
 
     def csvFactory(self):
 
-        with open('./data/sdc/acme_hardwork_output' + str(count) + '.csv', 'w') as f:
-            wr = csv.writer(f, delimiter = ',')
-            for record in self.records:
-                wr.writerow(record)
+        for count, record in enumerate(self.records):
+            with open('./data/sdc/acme_hardwork_output_' + str(count) + '.csv', 'w') as f:
+                wr = csv.writer(f, delimiter = ',')
+                wr.writerow(['transaction_id', 'transaction_time', 'item',
+                    'information_sku', 'information_price', 'cashier'])
+
+                for r in record:
+                    wr.writerow([
+                        r['transaction_id'],
+                        r['transaction_time'],
+                        r['item'],
+                        r['information']['sku'],
+                        r['information']['price'],
+                        r['cashier']
+                    ])
 
 
 if __name__ == '__main__':
