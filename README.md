@@ -1,9 +1,8 @@
-A demo of the StreamSets Data Collector.
+# StreamSets Data Collector - Demo.
 
-This demo uses Docker (engine compatible with compose version 2) and the following images:
+A demo of the StreamSets Data Collector, using Docker and `docker-compose` with:
 
-* [`mysql`]() version 5.6.
-* [`CDH`]().
-* [`mongoDB`]()
+* The [mysql Docker image](https://hub.docker.com/_/mysql/) (version 5.6).
+* The [StreamSets Data Collector Docker image](https://hub.docker.com/r/streamsets/datacollector/) (built on SDC version 2.7.2.0).
 
-These are defined in the docker-compose.yml file.
+The bash script `sdc_demo_helper.sh` orchestrates the demo stages, and `demo.py` generates the example data.
